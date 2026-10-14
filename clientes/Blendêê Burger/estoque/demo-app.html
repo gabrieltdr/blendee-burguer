@@ -1,0 +1,958 @@
+<title>Blendêê Burger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;800&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F3EFE6;
+    --surface:#FFFFFF;
+    --surface-2:#EAE3D3;
+    --text:#221D16;
+    --text-soft:#5B5347;
+    --accent:#D2491C;
+    --accent-ink:#FFFFFF;
+    --good:#4F6B4B;
+    --good-bg:#E4EBE1;
+    --caution:#96701F;
+    --caution-bg:#F1E6C9;
+    --warn:#B23A2E;
+    --warn-bg:#F3DDD8;
+    --border:#E0D8C6;
+    --shadow: 0 1px 2px rgba(34,29,22,0.06), 0 8px 24px -12px rgba(34,29,22,0.18);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17140F;
+      --surface:#211C15;
+      --surface-2:#2A241A;
+      --text:#F1EBDD;
+      --text-soft:#B8AF9C;
+      --accent:#E8703A;
+      --accent-ink:#1A1410;
+      --good:#8FB187;
+      --good-bg:#26301F;
+      --caution:#D9AE55;
+      --caution-bg:#332A16;
+      --warn:#E28175;
+      --warn-bg:#3A2320;
+      --border:#3A3225;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px -14px rgba(0,0,0,0.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17140F;
+    --surface:#211C15;
+    --surface-2:#2A241A;
+    --text:#F1EBDD;
+    --text-soft:#B8AF9C;
+    --accent:#E8703A;
+    --accent-ink:#1A1410;
+    --good:#8FB187;
+    --good-bg:#26301F;
+    --caution:#D9AE55;
+    --caution-bg:#332A16;
+    --warn:#E28175;
+    --warn-bg:#3A2320;
+    --border:#3A3225;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 12px 28px -14px rgba(0,0,0,0.55);
+  }
+
+  *{box-sizing:border-box;}
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none!important; animation:none!important;}
+  }
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Work Sans', system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.logo-word{font-family:'Archivo Expanded','Work Sans',sans-serif; text-wrap:balance;}
+  .mono{font-family:'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric: tabular-nums;}
+  button{font-family:inherit; cursor:pointer;}
+  input,select{font-family:inherit;}
+  :focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+
+  /* ---- shell ---- */
+  .sidebar{
+    position:fixed; top:0; left:0; bottom:0; width:248px;
+    background:var(--surface-2);
+    border-right:1px solid var(--border);
+    padding: calc(28px + env(safe-area-inset-top,0px)) 18px 24px;
+    display:flex; flex-direction:column; gap:28px;
+    overflow-y:auto;
+  }
+  .brand{display:flex; flex-direction:column; gap:9px; padding:0 2px;}
+  .brand-logo{width:100%; border-radius:10px; display:block; box-shadow:var(--shadow);}
+  .brand-sub{font-size:11px; color:var(--text-soft); font-family:'IBM Plex Mono'; letter-spacing:.04em; text-transform:uppercase; padding:0 4px;}
+
+  nav.mainnav{display:flex; flex-direction:column; gap:2px;}
+  .nav-btn{
+    display:flex; align-items:center; gap:11px;
+    padding:10px 12px; border-radius:8px; border:none; background:transparent;
+    color:var(--text-soft); font-size:14.5px; font-weight:500; text-align:left; width:100%;
+    transition:background .12s ease, color .12s ease;
+  }
+  .nav-btn svg{flex-shrink:0; opacity:.85;}
+  .nav-btn:hover{background:rgba(210,73,28,0.08); color:var(--text);}
+  .nav-btn[aria-current="page"]{background:var(--accent); color:var(--accent-ink); font-weight:600;}
+  .nav-btn[aria-current="page"] svg{opacity:1;}
+
+  .sidebar-foot{margin-top:auto; padding:0 6px; font-size:11.5px; color:var(--text-soft); line-height:1.5;}
+
+  .content{margin-left:248px; min-height:100%; padding:0 0 96px;}
+  .topbar{
+    position:sticky; top:env(safe-area-inset-top,0px); z-index:5;
+    background:var(--bg); border-bottom:1px solid var(--border);
+    padding:22px 36px 18px; display:flex; align-items:flex-end; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .topbar h1{margin:0; font-size:22px; font-weight:800;}
+  .topbar p{margin:4px 0 0; color:var(--text-soft); font-size:13.5px;}
+  .btn{
+    display:inline-flex; align-items:center; gap:7px; border:1px solid transparent; border-radius:8px;
+    padding:9px 15px; font-size:13.5px; font-weight:600; white-space:nowrap;
+  }
+  .btn-accent{background:var(--accent); color:var(--accent-ink);}
+  .btn-accent:hover{filter:brightness(1.06);}
+  .btn-accent:disabled{opacity:.45; cursor:default; filter:none;}
+  .btn-ghost{background:transparent; border-color:var(--border); color:var(--text);}
+  .btn-ghost:hover{background:var(--surface-2);}
+
+  main.view{padding:26px 36px 10px; max-width:980px;}
+  main.view[hidden]{display:none;}
+
+  /* ---- dashboard ---- */
+  .kpi-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:14px; margin-bottom:28px;}
+  .kpi{
+    background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px 18px;
+    box-shadow:var(--shadow);
+  }
+  .kpi-label{font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-soft); font-family:'IBM Plex Mono';}
+  .kpi-value{font-size:28px; font-weight:800; font-family:'Archivo Expanded'; margin-top:6px;}
+  .kpi-value.warn{color:var(--warn);}
+  .kpi-value.caution{color:var(--caution);}
+  .kpi-sub{font-size:12.5px; color:var(--text-soft); margin-top:2px;}
+
+  .panel-cols{display:grid; grid-template-columns:1.2fr 1fr; gap:18px;}
+  .panel-card{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:18px 20px; box-shadow:var(--shadow);}
+  .panel-card h2{font-size:14.5px; margin:0 0 12px; display:flex; align-items:center; justify-content:space-between;}
+  .panel-card h2 .see-all{font-size:12px; font-weight:600; color:var(--accent); font-family:'Work Sans';}
+  .mini-row{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 0; border-top:1px solid var(--border);}
+  .mini-row:first-of-type{border-top:none;}
+  .mini-name{font-size:13.5px; font-weight:600;}
+  .mini-meta{font-size:12px; color:var(--text-soft);}
+  .empty-note{font-size:13px; color:var(--text-soft); padding:6px 0;}
+
+  /* ---- pill/status ---- */
+  .pill{
+    display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:99px;
+    font-size:11.5px; font-weight:700; font-family:'IBM Plex Mono'; letter-spacing:.01em; white-space:nowrap;
+  }
+  .pill::before{content:""; width:6px; height:6px; border-radius:50%; background:currentColor;}
+  .pill-ok{background:var(--good-bg); color:var(--good);}
+  .pill-atencao{background:var(--caution-bg); color:var(--caution);}
+  .pill-critico{background:var(--warn-bg); color:var(--warn);}
+
+  /* ---- estoque ---- */
+  .toolbar{display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap; align-items:center;}
+  .search{
+    flex:1; min-width:160px; background:var(--surface); border:1px solid var(--border); border-radius:8px;
+    padding:9px 12px; font-size:13.5px; color:var(--text);
+  }
+  .chips{display:flex; gap:6px; flex-wrap:wrap;}
+  .chip{
+    padding:7px 12px; border-radius:99px; border:1px solid var(--border); background:var(--surface);
+    font-size:12.5px; font-weight:600; color:var(--text-soft);
+  }
+  .chip[aria-pressed="true"]{background:var(--accent); border-color:var(--accent); color:var(--accent-ink);}
+
+  .item-list{display:flex; flex-direction:column; gap:9px;}
+  .item-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:11px; padding:13px 16px;
+    display:grid; grid-template-columns:1fr auto auto auto; align-items:center; gap:16px; box-shadow:var(--shadow);
+  }
+  .item-main{min-width:0;}
+  .item-name{font-size:14.5px; font-weight:700;}
+  .item-cat{font-size:11px; color:var(--text-soft); font-family:'IBM Plex Mono'; text-transform:uppercase; letter-spacing:.03em; margin-top:2px;}
+  .item-qty{text-align:right; min-width:108px;}
+  .item-qty .num{font-size:15.5px; font-weight:700;}
+  .item-qty .unit{font-size:11.5px; color:var(--text-soft);}
+  .bar-track{width:88px; height:5px; border-radius:99px; background:var(--surface-2); overflow:hidden; margin-top:6px;}
+  .bar-fill{height:100%; border-radius:99px; background:var(--good);}
+  .bar-fill.atencao{background:var(--caution);}
+  .bar-fill.critico{background:var(--warn);}
+  .item-actions{display:flex; gap:6px;}
+  .icon-btn{
+    width:32px; height:32px; border-radius:8px; border:1px solid var(--border); background:var(--surface);
+    display:flex; align-items:center; justify-content:center; color:var(--text-soft);
+  }
+  .icon-btn:hover{background:var(--surface-2); color:var(--text);}
+
+  /* ---- vendas ---- */
+  .lede-venda{font-size:13.5px; color:var(--text-soft); margin:0 0 16px; max-width:56ch;}
+  .venda-list{display:flex; flex-direction:column; gap:10px;}
+  .venda-row{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:11px 0; border-top:1px solid var(--border);
+  }
+  .venda-row:first-child{border-top:none;}
+  .venda-info .venda-nome{font-size:14.5px; font-weight:700;}
+  .venda-info .venda-preco{font-size:12px; color:var(--text-soft); font-family:'IBM Plex Mono';}
+  .stepper{display:flex; align-items:center; gap:10px;}
+  .stepper button{
+    width:30px; height:30px; border-radius:8px; border:1px solid var(--border); background:var(--surface);
+    font-size:16px; font-weight:700; color:var(--text); display:flex; align-items:center; justify-content:center;
+  }
+  .stepper button:hover{background:var(--surface-2);}
+  .stepper .qtd{min-width:26px; text-align:center; font-size:15px; font-weight:700; font-family:'IBM Plex Mono';}
+  .venda-footer{
+    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    margin-top:16px; padding-top:16px; border-top:1px solid var(--border);
+  }
+  .venda-resumo{font-size:13px; color:var(--text-soft);}
+  .venda-resumo strong{color:var(--text); font-family:'IBM Plex Mono';}
+  .sub-h{font-size:14.5px; font-weight:800; margin:0 0 10px;}
+  .venda-historico{display:flex; flex-direction:column; gap:9px;}
+  .hist-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:11px; padding:13px 16px;
+    box-shadow:var(--shadow);
+  }
+  .hist-top{display:flex; justify-content:space-between; gap:10px; font-size:13px;}
+  .hist-date{font-family:'IBM Plex Mono'; color:var(--text-soft);}
+  .hist-total{font-weight:700;}
+  .hist-items{font-size:12.5px; color:var(--text-soft); margin-top:4px;}
+  .hist-margem{font-size:11.5px; color:var(--good); margin-top:4px; font-family:'IBM Plex Mono';}
+
+  /* ---- agenda ---- */
+  .agenda-list{display:flex; flex-direction:column; gap:9px;}
+  .agenda-card{
+    background:var(--surface); border:1px solid var(--border); border-left:4px solid var(--accent); border-radius:10px;
+    padding:13px 16px; display:flex; align-items:flex-start; gap:14px; box-shadow:var(--shadow);
+  }
+  .agenda-card.atrasado{border-left-color:var(--warn);}
+  .agenda-card.feito{opacity:.55; border-left-color:var(--border);}
+  .agenda-check{
+    width:22px; height:22px; border-radius:6px; border:1.5px solid var(--border); background:var(--surface);
+    flex-shrink:0; margin-top:2px; display:flex; align-items:center; justify-content:center; color:var(--accent-ink);
+  }
+  .agenda-check.on{background:var(--accent); border-color:var(--accent);}
+  .agenda-date{
+    font-family:'IBM Plex Mono'; font-size:11.5px; color:var(--text-soft); text-transform:uppercase; letter-spacing:.03em;
+    min-width:72px; padding-top:2px;
+  }
+  .agenda-body{flex:1; min-width:0;}
+  .agenda-title{font-size:14px; font-weight:700;}
+  .agenda-card.feito .agenda-title{text-decoration:line-through;}
+  .agenda-note{font-size:12.5px; color:var(--text-soft); margin-top:2px;}
+  .agenda-tag{font-size:10.5px; font-weight:700; color:var(--warn); font-family:'IBM Plex Mono'; text-transform:uppercase; margin-top:3px;}
+
+  /* ---- modal ---- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(23,20,15,0.45); display:flex; align-items:center; justify-content:center;
+    padding:20px; z-index:50;
+  }
+  .overlay[hidden]{display:none;}
+  .modal{
+    background:var(--surface); border-radius:14px; padding:22px 22px 18px; width:100%; max-width:400px;
+    box-shadow:var(--shadow); max-height:90vh; overflow-y:auto;
+  }
+  .modal h3{margin:0 0 16px; font-size:17px;}
+  .field{display:flex; flex-direction:column; gap:5px; margin-bottom:13px;}
+  .field label{font-size:12px; font-weight:600; color:var(--text-soft);}
+  .field input, .field select, .field textarea{
+    border:1px solid var(--border); border-radius:8px; padding:9px 11px; font-size:14px; background:var(--bg); color:var(--text);
+  }
+  .field-row{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .modal-actions{display:flex; justify-content:flex-end; gap:8px; margin-top:6px;}
+
+  /* ---- toast ---- */
+  .toast{
+    position:fixed; left:50%; bottom:calc(24px + env(safe-area-inset-bottom,0px)); transform:translateX(-50%);
+    background:var(--text); color:var(--bg); padding:11px 16px; border-radius:9px; font-size:13.5px;
+    display:flex; align-items:center; gap:14px; box-shadow:var(--shadow); z-index:60;
+  }
+  .toast[hidden]{display:none;}
+  .toast button{background:none; border:none; color:var(--accent); font-weight:700; font-size:13px;}
+
+  /* ---- bottom nav (mobile) ---- */
+  .bottomnav{
+    display:none; position:fixed; left:0; right:0; bottom:0; z-index:10;
+    background:var(--surface); border-top:1px solid var(--border);
+    padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px));
+    justify-content:space-around;
+  }
+  .bottomnav button{
+    background:none; border:none; display:flex; flex-direction:column; align-items:center; gap:3px;
+    color:var(--text-soft); font-size:10.5px; font-weight:600; padding:4px 10px; border-radius:8px;
+  }
+  .bottomnav button[aria-current="page"]{color:var(--accent);}
+
+  @media (max-width: 780px){
+    .sidebar{display:none;}
+    .content{margin-left:0; padding-bottom:84px;}
+    .topbar{padding:18px 18px 14px;}
+    main.view{padding:20px 16px 10px;}
+    .bottomnav{display:flex;}
+    .panel-cols{grid-template-columns:1fr;}
+    .item-card{grid-template-columns:1fr auto; row-gap:10px;}
+    .item-qty{text-align:left; grid-column:1; order:3;}
+    .item-actions{grid-column:2; order:3; align-self:start;}
+    .bar-track{width:100%;}
+  }
+</style>
+
+<div class="sidebar">
+  <div class="brand">
+    <img src="logo-blendee.png" alt="Blendêê Burger" class="brand-logo">
+    <div class="brand-sub">Sistema de gestão</div>
+  </div>
+  <nav class="mainnav" id="nav-desktop">
+    <button class="nav-btn" data-view="painel" aria-current="page">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10 0h6V11h-6v9Zm0-16v5h6V4h-6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+      Painel
+    </button>
+    <button class="nav-btn" data-view="estoque">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3.5 8 12 4l8.5 4-8.5 4-8.5-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3.5 8v8L12 20l8.5-4V8" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 12v8" stroke="currentColor" stroke-width="1.6"/></svg>
+      Estoque
+    </button>
+    <button class="nav-btn" data-view="vendas">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 6h16l-1.5 11a2 2 0 0 1-2 1.8H7.5a2 2 0 0 1-2-1.8L4 6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 6V5a4 4 0 0 1 8 0v1" stroke="currentColor" stroke-width="1.6"/></svg>
+      Vendas
+    </button>
+    <button class="nav-btn" data-view="agenda">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="5.5" width="16" height="14.5" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 9.5h16M8 3.5v3.5M16 3.5v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      Agenda
+    </button>
+  </nav>
+  <div class="sidebar-foot">Blendêê Burger<br>Sistema de gestão &middot; v0.1</div>
+</div>
+
+<div class="content">
+  <header class="topbar">
+    <div>
+      <h1 id="view-title">Painel</h1>
+      <p id="view-sub">Visão geral da loja hoje</p>
+    </div>
+    <div id="topbar-actions"></div>
+  </header>
+
+  <main class="view" id="view-painel">
+    <div class="kpi-grid" id="kpi-grid"></div>
+    <div class="panel-cols">
+      <div class="panel-card">
+        <h2>Precisa de atenção <span class="see-all" data-goto="estoque">ver estoque</span></h2>
+        <div id="painel-atencao"></div>
+      </div>
+      <div class="panel-card">
+        <h2>Próximos na agenda <span class="see-all" data-goto="agenda">ver agenda</span></h2>
+        <div id="painel-agenda"></div>
+      </div>
+    </div>
+  </main>
+
+  <main class="view" id="view-estoque" hidden>
+    <div class="toolbar">
+      <input class="search" id="estoque-search" type="text" placeholder="Buscar item...">
+    </div>
+    <div class="chips" id="estoque-chips"></div>
+    <div class="item-list" id="estoque-list" style="margin-top:14px;"></div>
+  </main>
+
+  <main class="view" id="view-vendas" hidden>
+    <div class="card venda-card" style="padding:18px 20px; margin-bottom:18px;">
+      <p class="lede-venda">Marca quantas unidades de cada produto você vendeu hoje — o estoque dos insumos é baixado sozinho, pela ficha técnica de cada produto.</p>
+      <div class="venda-list" id="venda-list"></div>
+      <div class="venda-footer">
+        <div id="venda-resumo" class="venda-resumo"></div>
+        <button class="btn btn-accent" id="venda-confirmar">Lançar vendas de hoje</button>
+      </div>
+    </div>
+    <h2 class="sub-h">Lançamentos recentes</h2>
+    <div class="venda-historico" id="venda-historico"></div>
+  </main>
+
+  <main class="view" id="view-agenda" hidden>
+    <div class="agenda-list" id="agenda-list"></div>
+  </main>
+</div>
+
+<nav class="bottomnav" id="nav-mobile">
+  <button data-view="painel" aria-current="page">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 13h6V4H4v9Zm0 7h6v-5H4v5Zm10 0h6V11h-6v9Zm0-16v5h6V4h-6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>
+    Painel
+  </button>
+  <button data-view="estoque">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M3.5 8 12 4l8.5 4-8.5 4-8.5-4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3.5 8v8L12 20l8.5-4V8" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 12v8" stroke="currentColor" stroke-width="1.6"/></svg>
+    Estoque
+  </button>
+  <button data-view="vendas">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 6h16l-1.5 11a2 2 0 0 1-2 1.8H7.5a2 2 0 0 1-2-1.8L4 6Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M8 6V5a4 4 0 0 1 8 0v1" stroke="currentColor" stroke-width="1.6"/></svg>
+    Vendas
+  </button>
+  <button data-view="agenda">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="5.5" width="16" height="14.5" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M4 9.5h16M8 3.5v3.5M16 3.5v3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    Agenda
+  </button>
+</nav>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="modal" id="modal"></div>
+</div>
+
+<div class="toast" id="toast" hidden>
+  <span id="toast-msg"></span>
+  <button id="toast-undo">Desfazer</button>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var STORE_KEY = "blendee_burger_estoque_v1";
+  var state = null;
+  var lastDeleted = null;
+  var toastTimer = null;
+  var currentView = "painel";
+  var estoqueFilter = { categoria: "todos", termo: "" };
+  var pendingVenda = {};
+
+  function todayISO(offsetDays){
+    var d = new Date();
+    d.setHours(0,0,0,0);
+    d.setDate(d.getDate() + (offsetDays||0));
+    return d.toISOString().slice(0,10);
+  }
+
+  function seed(){
+    return {
+      estoque: [
+        { id:"i1", nome:"Pão brioche", categoria:"Pães", unidade:"un", quantidade:86, minimo:40, custo:0.90 },
+        { id:"i2", nome:"Carne artesanal 150g", categoria:"Carnes", unidade:"un", quantidade:32, minimo:30, custo:8.50 },
+        { id:"i3", nome:"Queijo cheddar fatiado", categoria:"Laticínios", unidade:"fatias", quantidade:210, minimo:100, custo:0.45 },
+        { id:"i4", nome:"Bacon", categoria:"Carnes", unidade:"kg", quantidade:3.2, minimo:4, custo:42 },
+        { id:"i5", nome:"Alface", categoria:"Hortifruti", unidade:"maços", quantidade:6, minimo:5, custo:6 },
+        { id:"i6", nome:"Tomate", categoria:"Hortifruti", unidade:"kg", quantidade:4.5, minimo:3, custo:7 },
+        { id:"i7", nome:"Molho especial da casa", categoria:"Molhos", unidade:"litros", quantidade:2, minimo:3, custo:18 },
+        { id:"i8", nome:"Molho barbecue", categoria:"Molhos", unidade:"litros", quantidade:5, minimo:2, custo:22 },
+        { id:"i9", nome:"Embalagem delivery", categoria:"Embalagens", unidade:"un", quantidade:150, minimo:80, custo:0.60 },
+        { id:"i10", nome:"Guardanapo", categoria:"Embalagens", unidade:"pacotes", quantidade:12, minimo:10, custo:9 },
+        { id:"i11", nome:"Batata congelada", categoria:"Congelados", unidade:"kg", quantidade:18, minimo:15, custo:9 },
+        { id:"i12", nome:"Refrigerante lata", categoria:"Bebidas", unidade:"un", quantidade:48, minimo:24, custo:3.20 }
+      ],
+      produtos: [
+        { id:"p1", nome:"X-Burger", preco:27, receita:[
+          { insumoId:"i1", qtd:1 }, { insumoId:"i2", qtd:1 }, { insumoId:"i3", qtd:1 },
+          { insumoId:"i5", qtd:0.05 }, { insumoId:"i6", qtd:0.08 }, { insumoId:"i9", qtd:1 }
+        ]},
+        { id:"p2", nome:"Burger Bacon", preco:32, receita:[
+          { insumoId:"i1", qtd:1 }, { insumoId:"i2", qtd:1 }, { insumoId:"i4", qtd:0.05 },
+          { insumoId:"i3", qtd:1 }, { insumoId:"i8", qtd:0.03 }, { insumoId:"i9", qtd:1 }
+        ]},
+        { id:"p3", nome:"Batata frita (porção)", preco:15, receita:[
+          { insumoId:"i11", qtd:0.2 }
+        ]},
+        { id:"p4", nome:"Refrigerante lata", preco:7, receita:[
+          { insumoId:"i12", qtd:1 }
+        ]}
+      ],
+      vendas: [],
+      agenda: [
+        { id:"a1", data:todayISO(2), titulo:"Compra de carne e pão", nota:"Fornecedor Casa do Boi", feito:false },
+        { id:"a2", data:todayISO(5), titulo:"Abertura da loja 18h", nota:"Sexta-feira de movimento alto", feito:false },
+        { id:"a3", data:todayISO(7), titulo:"Fechamento semanal de caixa", nota:"", feito:false },
+        { id:"a4", data:todayISO(-3), titulo:"Pagamento fornecedor de queijos", nota:"Laticínios Vale Verde", feito:true }
+      ]
+    };
+  }
+
+  function load(){
+    try{
+      var raw = localStorage.getItem(STORE_KEY);
+      if(raw){
+        var parsed = JSON.parse(raw);
+        if(!parsed.produtos) parsed.produtos = seed().produtos;
+        if(!parsed.vendas) parsed.vendas = [];
+        return parsed;
+      }
+    }catch(e){}
+    var s = seed();
+    save(s);
+    return s;
+  }
+  function save(s){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(s)); }catch(e){}
+  }
+  function uid(){ return "x" + Math.random().toString(36).slice(2,10); }
+
+  function status(item){
+    if(item.quantidade <= item.minimo) return "critico";
+    if(item.quantidade <= item.minimo * 1.3) return "atencao";
+    return "ok";
+  }
+  var statusLabel = { ok:"Ok", atencao:"Atenção", critico:"Crítico" };
+
+  function fmtQty(n){
+    return (Math.round(n*10)/10).toString().replace(".", ",");
+  }
+  function fmtMoney(n){
+    return "R$ " + (Math.round(n*100)/100).toFixed(2).replace(".", ",");
+  }
+  function fmtDate(iso){
+    var d = new Date(iso + "T00:00:00");
+    var s = new Intl.DateTimeFormat("pt-BR", { weekday:"short", day:"2-digit", month:"short" }).format(d);
+    return s.replace(".", "").replace(/^\w/, function(c){ return c.toUpperCase(); });
+  }
+
+  function showToast(msg, onUndo){
+    var t = document.getElementById("toast");
+    var undoBtn = document.getElementById("toast-undo");
+    document.getElementById("toast-msg").textContent = msg;
+    undoBtn.hidden = !onUndo;
+    undoBtn.onclick = function(){
+      if(onUndo) onUndo();
+      t.hidden = true;
+      clearTimeout(toastTimer);
+    };
+    t.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ t.hidden = true; }, 4200);
+  }
+
+  /* ---------- rendering ---------- */
+
+  function setView(view){
+    currentView = view;
+    ["painel","estoque","vendas","agenda"].forEach(function(v){
+      document.getElementById("view-" + v).hidden = (v !== view);
+    });
+    document.querySelectorAll("#nav-desktop .nav-btn, #nav-mobile button").forEach(function(b){
+      if(b.dataset.view === view) b.setAttribute("aria-current","page");
+      else b.removeAttribute("aria-current");
+    });
+    var titles = {
+      painel: ["Painel", "Visão geral da loja hoje"],
+      estoque: ["Estoque", state.estoque.length + " itens cadastrados"],
+      vendas: ["Vendas", "Lançar vendas do dia e baixar o estoque sozinho"],
+      agenda: ["Agenda", "Compromissos e lembretes"]
+    };
+    document.getElementById("view-title").textContent = titles[view][0];
+    document.getElementById("view-sub").textContent = titles[view][1];
+    renderTopbarActions();
+    renderAll();
+  }
+
+  function renderTopbarActions(){
+    var el = document.getElementById("topbar-actions");
+    el.innerHTML = "";
+    if(currentView === "estoque"){
+      el.appendChild(makeBtn("+ Novo item", "btn btn-accent", function(){ openItemModal(null); }));
+    } else if(currentView === "agenda"){
+      el.appendChild(makeBtn("+ Novo compromisso", "btn btn-accent", function(){ openAgendaModal(null); }));
+    }
+  }
+  function makeBtn(text, cls, onClick){
+    var b = document.createElement("button");
+    b.className = cls; b.textContent = text; b.onclick = onClick;
+    return b;
+  }
+
+  function renderAll(){
+    renderPainel();
+    renderEstoque();
+    renderVendas();
+    renderAgenda();
+  }
+
+  function renderPainel(){
+    var itens = state.estoque;
+    var criticos = itens.filter(function(i){ return status(i) === "critico"; });
+    var atencoes = itens.filter(function(i){ return status(i) === "atencao"; });
+    var pendentes = state.agenda.filter(function(a){ return !a.feito; }).sort(function(a,b){ return a.data.localeCompare(b.data); });
+    var proximo = pendentes[0];
+
+    var valorEstoque = itens.reduce(function(sum,i){ return sum + i.quantidade * (i.custo||0); }, 0);
+
+    var kpi = document.getElementById("kpi-grid");
+    kpi.innerHTML = "";
+    kpi.appendChild(kpiTile("Itens cadastrados", itens.length, "", ""));
+    kpi.appendChild(kpiTile("Estado crítico", criticos.length, criticos.length ? "warn" : "", criticos.length ? "precisa repor" : "tudo em dia"));
+    kpi.appendChild(kpiTile("Em atenção", atencoes.length, atencoes.length ? "caution" : "", ""));
+    kpi.appendChild(kpiTile("Valor em estoque", fmtMoney(valorEstoque), "", "pelo custo cadastrado"));
+    kpi.appendChild(kpiTile("Próximo compromisso", proximo ? fmtDate(proximo.data) : "—", "", proximo ? proximo.titulo : "nada agendado"));
+
+    var aten = document.getElementById("painel-atencao");
+    var lista = criticos.concat(atencoes).slice(0,5);
+    if(!lista.length){
+      aten.innerHTML = '<div class="empty-note">Nenhum item em alerta agora.</div>';
+    } else {
+      aten.innerHTML = lista.map(function(i){
+        var st = status(i);
+        return '<div class="mini-row"><div><div class="mini-name">'+esc(i.nome)+'</div><div class="mini-meta">'+fmtQty(i.quantidade)+' '+esc(i.unidade)+' &middot; mín. '+fmtQty(i.minimo)+'</div></div><span class="pill pill-'+st+'">'+statusLabel[st]+'</span></div>';
+      }).join("");
+    }
+
+    var ag = document.getElementById("painel-agenda");
+    var prox = pendentes.slice(0,4);
+    if(!prox.length){
+      ag.innerHTML = '<div class="empty-note">Nenhum compromisso pendente.</div>';
+    } else {
+      ag.innerHTML = prox.map(function(a){
+        return '<div class="mini-row"><div><div class="mini-name">'+esc(a.titulo)+'</div><div class="mini-meta">'+esc(a.nota||"")+'</div></div><span class="mini-meta mono">'+fmtDate(a.data)+'</span></div>';
+      }).join("");
+    }
+  }
+
+  function kpiTile(label, value, valClass, sub){
+    var d = document.createElement("div");
+    d.className = "kpi";
+    d.innerHTML = '<div class="kpi-label">'+label+'</div><div class="kpi-value '+(valClass||"")+'">'+value+'</div><div class="kpi-sub">'+(sub||"")+'</div>';
+    return d;
+  }
+
+  function renderEstoque(){
+    var cats = ["todos"].concat(uniq(state.estoque.map(function(i){ return i.categoria; })));
+    var chips = document.getElementById("estoque-chips");
+    chips.innerHTML = "";
+    cats.forEach(function(c){
+      var b = document.createElement("button");
+      b.className = "chip"; b.textContent = c === "todos" ? "Todos" : c;
+      b.setAttribute("aria-pressed", estoqueFilter.categoria === c ? "true" : "false");
+      b.onclick = function(){ estoqueFilter.categoria = c; renderEstoque(); };
+      chips.appendChild(b);
+    });
+
+    var list = document.getElementById("estoque-list");
+    var termo = estoqueFilter.termo.trim().toLowerCase();
+    var itens = state.estoque.filter(function(i){
+      var okCat = estoqueFilter.categoria === "todos" || i.categoria === estoqueFilter.categoria;
+      var okTermo = !termo || i.nome.toLowerCase().indexOf(termo) > -1;
+      return okCat && okTermo;
+    }).sort(function(a,b){
+      var order = { critico:0, atencao:1, ok:2 };
+      return order[status(a)] - order[status(b)] || a.nome.localeCompare(b.nome);
+    });
+
+    if(!itens.length){
+      list.innerHTML = '<div class="empty-note">Nenhum item encontrado.</div>';
+      return;
+    }
+
+    list.innerHTML = itens.map(function(i){
+      var st = status(i);
+      var pct = Math.max(6, Math.min(100, (i.quantidade / (i.minimo * 2 || 1)) * 100));
+      return (
+        '<div class="item-card" data-id="'+i.id+'">' +
+          '<div class="item-main"><div class="item-name">'+esc(i.nome)+'</div><div class="item-cat">'+esc(i.categoria)+'</div></div>' +
+          '<div class="item-qty"><span class="num mono">'+fmtQty(i.quantidade)+'</span> <span class="unit">'+esc(i.unidade)+'</span><div class="bar-track"><div class="bar-fill '+st+'" style="width:'+pct+'%"></div></div></div>' +
+          '<span class="pill pill-'+st+'">'+statusLabel[st]+'</span>' +
+          '<div class="item-actions">' +
+            '<button class="icon-btn" data-edit="'+i.id+'" aria-label="Editar '+esc(i.nome)+'">'+iconEdit()+'</button>' +
+            '<button class="icon-btn" data-del="'+i.id+'" aria-label="Remover '+esc(i.nome)+'">'+iconTrash()+'</button>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join("");
+  }
+
+  function renderAgenda(){
+    var list = document.getElementById("agenda-list");
+    var hoje = todayISO(0);
+    var itens = state.agenda.slice().sort(function(a,b){
+      if(a.feito !== b.feito) return a.feito ? 1 : -1;
+      return a.data.localeCompare(b.data);
+    });
+    if(!itens.length){
+      list.innerHTML = '<div class="empty-note">Nenhum compromisso cadastrado.</div>';
+      return;
+    }
+    list.innerHTML = itens.map(function(a){
+      var atrasado = !a.feito && a.data < hoje;
+      return (
+        '<div class="agenda-card '+(a.feito?"feito":"")+' '+(atrasado?"atrasado":"")+'" data-id="'+a.id+'">' +
+          '<button class="agenda-check '+(a.feito?"on":"")+'" data-toggle="'+a.id+'" aria-label="Marcar concluído">'+(a.feito?iconCheck():"")+'</button>' +
+          '<div class="agenda-date">'+fmtDate(a.data)+'</div>' +
+          '<div class="agenda-body">' +
+            '<div class="agenda-title">'+esc(a.titulo)+'</div>' +
+            (a.nota ? '<div class="agenda-note">'+esc(a.nota)+'</div>' : "") +
+            (atrasado ? '<div class="agenda-tag">Atrasado</div>' : "") +
+          '</div>' +
+          '<div class="item-actions"><button class="icon-btn" data-deldata="'+a.id+'" aria-label="Remover compromisso">'+iconTrash()+'</button></div>' +
+        '</div>'
+      );
+    }).join("");
+  }
+
+  function renderVendas(){
+    var list = document.getElementById("venda-list");
+    list.innerHTML = state.produtos.map(function(p){
+      var qtd = pendingVenda[p.id] || 0;
+      return (
+        '<div class="venda-row" data-pid="'+p.id+'">' +
+          '<div class="venda-info"><div class="venda-nome">'+esc(p.nome)+'</div><div class="venda-preco">'+fmtMoney(p.preco)+'</div></div>' +
+          '<div class="stepper">' +
+            '<button type="button" data-step="-1" aria-label="Diminuir">&minus;</button>' +
+            '<span class="qtd">'+qtd+'</span>' +
+            '<button type="button" data-step="1" aria-label="Aumentar">+</button>' +
+          '</div>' +
+        '</div>'
+      );
+    }).join("");
+
+    var totalItens = 0, faturamento = 0, custoTotal = 0;
+    state.produtos.forEach(function(p){
+      var qtd = pendingVenda[p.id] || 0;
+      if(!qtd) return;
+      totalItens += qtd;
+      faturamento += qtd * p.preco;
+      custoTotal += qtd * custoReceita(p);
+    });
+    var resumo = document.getElementById("venda-resumo");
+    if(!totalItens){
+      resumo.innerHTML = "Nenhuma venda marcada ainda.";
+    } else {
+      resumo.innerHTML = totalItens+' itens &middot; faturamento <strong>'+fmtMoney(faturamento)+'</strong> &middot; custo de insumo <strong>'+fmtMoney(custoTotal)+'</strong>';
+    }
+    document.getElementById("venda-confirmar").disabled = !totalItens;
+
+    var hist = document.getElementById("venda-historico");
+    var registros = state.vendas.slice().sort(function(a,b){ return b.data.localeCompare(a.data); }).slice(0,8);
+    if(!registros.length){
+      hist.innerHTML = '<div class="empty-note">Nenhum lançamento ainda.</div>';
+    } else {
+      hist.innerHTML = registros.map(function(v){
+        var resumoItens = v.itens.map(function(it){
+          var p = state.produtos.find(function(x){ return x.id === it.produtoId; });
+          return it.qtd+"x "+(p?p.nome:"item removido");
+        }).join(", ");
+        return (
+          '<div class="hist-card">' +
+            '<div class="hist-top"><span class="hist-date">'+fmtDate(v.data)+'</span><span class="hist-total">'+fmtMoney(v.faturamento)+'</span></div>' +
+            '<div class="hist-items">'+esc(resumoItens)+'</div>' +
+            '<div class="hist-margem">Custo de insumo: '+fmtMoney(v.custo)+'</div>' +
+          '</div>'
+        );
+      }).join("");
+    }
+  }
+
+  function custoReceita(produto){
+    return produto.receita.reduce(function(sum, r){
+      var insumo = state.estoque.find(function(i){ return i.id === r.insumoId; });
+      return sum + (insumo ? (insumo.custo||0) * r.qtd : 0);
+    }, 0);
+  }
+
+  function confirmarVendas(){
+    var itensVenda = [];
+    var faturamento = 0, custoTotal = 0;
+    state.produtos.forEach(function(p){
+      var qtd = pendingVenda[p.id] || 0;
+      if(!qtd) return;
+      itensVenda.push({ produtoId:p.id, qtd:qtd });
+      faturamento += qtd * p.preco;
+      custoTotal += qtd * custoReceita(p);
+      p.receita.forEach(function(r){
+        var insumo = state.estoque.find(function(i){ return i.id === r.insumoId; });
+        if(insumo) insumo.quantidade = Math.max(0, insumo.quantidade - r.qtd * qtd);
+      });
+    });
+    if(!itensVenda.length) return;
+    state.vendas.push({ id:uid(), data:todayISO(0), itens:itensVenda, faturamento:faturamento, custo:custoTotal });
+    pendingVenda = {};
+    save(state);
+    renderAll();
+    showToast("Vendas lançadas — estoque atualizado automaticamente.");
+  }
+
+  function wireVendas(){
+    document.getElementById("venda-list").addEventListener("click", function(e){
+      var btn = e.target.closest("[data-step]");
+      if(!btn) return;
+      var row = btn.closest("[data-pid]");
+      var pid = row.getAttribute("data-pid");
+      var delta = parseInt(btn.getAttribute("data-step"), 10);
+      var next = (pendingVenda[pid] || 0) + delta;
+      pendingVenda[pid] = Math.max(0, next);
+      renderVendas();
+    });
+    document.getElementById("venda-confirmar").addEventListener("click", confirmarVendas);
+  }
+
+  function uniq(arr){ return arr.filter(function(v,i){ return arr.indexOf(v) === i; }); }
+  function esc(s){
+    return String(s==null?"":s).replace(/[&<>"']/g, function(c){
+      return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+    });
+  }
+  function iconEdit(){ return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 20h4l10.5-10.5a2 2 0 0 0 0-2.83l-1.17-1.17a2 2 0 0 0-2.83 0L4 16v4Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>'; }
+  function iconTrash(){ return '<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M5 7h14M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 13a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1l1-13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'; }
+  function iconCheck(){ return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 12.5 9.5 18 20 6.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>'; }
+
+  /* ---------- modals ---------- */
+
+  function openOverlay(html){
+    document.getElementById("modal").innerHTML = html;
+    document.getElementById("overlay").hidden = false;
+  }
+  function closeOverlay(){ document.getElementById("overlay").hidden = true; }
+
+  function openItemModal(id){
+    var item = id ? state.estoque.find(function(i){ return i.id === id; }) : null;
+    openOverlay(
+      '<h3>'+(item ? "Editar item" : "Novo item")+'</h3>' +
+      '<form id="item-form">' +
+        '<div class="field"><label for="f-nome">Nome</label><input id="f-nome" required value="'+(item?esc(item.nome):"")+'"></div>' +
+        '<div class="field"><label for="f-cat">Categoria</label><input id="f-cat" required value="'+(item?esc(item.categoria):"")+'" placeholder="Ex: Carnes"></div>' +
+        '<div class="field-row">' +
+          '<div class="field"><label for="f-qtd">Quantidade</label><input id="f-qtd" type="number" step="0.1" min="0" required value="'+(item?item.quantidade:"")+'"></div>' +
+          '<div class="field"><label for="f-min">Estoque mínimo</label><input id="f-min" type="number" step="0.1" min="0" required value="'+(item?item.minimo:"")+'"></div>' +
+        '</div>' +
+        '<div class="field-row">' +
+          '<div class="field"><label for="f-un">Unidade</label><input id="f-un" required value="'+(item?esc(item.unidade):"")+'" placeholder="kg, un, litros..."></div>' +
+          '<div class="field"><label for="f-custo">Custo por unidade (R$)</label><input id="f-custo" type="number" step="0.01" min="0" value="'+(item&&item.custo!=null?item.custo:"")+'"></div>' +
+        '</div>' +
+        '<div class="modal-actions">' +
+          '<button type="button" class="btn btn-ghost" id="cancel-btn">Cancelar</button>' +
+          '<button type="submit" class="btn btn-accent">Salvar</button>' +
+        '</div>' +
+      '</form>'
+    );
+    document.getElementById("cancel-btn").onclick = closeOverlay;
+    document.getElementById("item-form").onsubmit = function(e){
+      e.preventDefault();
+      var data = {
+        nome: document.getElementById("f-nome").value.trim(),
+        categoria: document.getElementById("f-cat").value.trim(),
+        quantidade: parseFloat(document.getElementById("f-qtd").value),
+        minimo: parseFloat(document.getElementById("f-min").value),
+        unidade: document.getElementById("f-un").value.trim(),
+        custo: parseFloat(document.getElementById("f-custo").value) || 0
+      };
+      if(item){
+        Object.assign(item, data);
+      } else {
+        data.id = uid();
+        state.estoque.push(data);
+      }
+      save(state);
+      closeOverlay();
+      renderAll();
+    };
+  }
+
+  function openAgendaModal(id){
+    var ev = id ? state.agenda.find(function(a){ return a.id === id; }) : null;
+    openOverlay(
+      '<h3>'+(ev ? "Editar compromisso" : "Novo compromisso")+'</h3>' +
+      '<form id="agenda-form">' +
+        '<div class="field"><label for="f-data">Data</label><input id="f-data" type="date" required value="'+(ev?ev.data:todayISO(1))+'"></div>' +
+        '<div class="field"><label for="f-titulo">Título</label><input id="f-titulo" required value="'+(ev?esc(ev.titulo):"")+'" placeholder="Ex: Compra de carne"></div>' +
+        '<div class="field"><label for="f-nota">Nota (opcional)</label><input id="f-nota" value="'+(ev?esc(ev.nota||""):"")+'" placeholder="Fornecedor, observação..."></div>' +
+        '<div class="modal-actions">' +
+          '<button type="button" class="btn btn-ghost" id="cancel-btn2">Cancelar</button>' +
+          '<button type="submit" class="btn btn-accent">Salvar</button>' +
+        '</div>' +
+      '</form>'
+    );
+    document.getElementById("cancel-btn2").onclick = closeOverlay;
+    document.getElementById("agenda-form").onsubmit = function(e){
+      e.preventDefault();
+      var data = {
+        data: document.getElementById("f-data").value,
+        titulo: document.getElementById("f-titulo").value.trim(),
+        nota: document.getElementById("f-nota").value.trim()
+      };
+      if(ev){
+        Object.assign(ev, data);
+      } else {
+        data.id = uid();
+        data.feito = false;
+        state.agenda.push(data);
+      }
+      save(state);
+      closeOverlay();
+      renderAll();
+    };
+  }
+
+  /* ---------- events ---------- */
+
+  function wireNav(){
+    document.querySelectorAll("#nav-desktop .nav-btn, #nav-mobile button").forEach(function(b){
+      b.addEventListener("click", function(){ setView(b.dataset.view); });
+    });
+    document.querySelectorAll(".see-all").forEach(function(b){
+      b.addEventListener("click", function(){ setView(b.dataset.goto); });
+    });
+  }
+
+  function wireEstoque(){
+    document.getElementById("estoque-search").addEventListener("input", function(e){
+      estoqueFilter.termo = e.target.value;
+      renderEstoque();
+    });
+    document.getElementById("estoque-list").addEventListener("click", function(e){
+      var editId = e.target.closest("[data-edit]");
+      var delId = e.target.closest("[data-del]");
+      if(editId) openItemModal(editId.getAttribute("data-edit"));
+      if(delId){
+        var id = delId.getAttribute("data-del");
+        var idx = state.estoque.findIndex(function(i){ return i.id === id; });
+        var removed = state.estoque[idx];
+        state.estoque.splice(idx,1);
+        save(state); renderAll();
+        showToast('"'+removed.nome+'" removido.', function(){
+          state.estoque.splice(idx,0,removed); save(state); renderAll();
+        });
+      }
+    });
+  }
+
+  function wireAgenda(){
+    document.getElementById("agenda-list").addEventListener("click", function(e){
+      var toggleId = e.target.closest("[data-toggle]");
+      var delId = e.target.closest("[data-deldata]");
+      if(toggleId){
+        var ev = state.agenda.find(function(a){ return a.id === toggleId.getAttribute("data-toggle"); });
+        ev.feito = !ev.feito;
+        save(state); renderAll();
+      }
+      if(delId){
+        var id = delId.getAttribute("data-deldata");
+        var idx = state.agenda.findIndex(function(a){ return a.id === id; });
+        var removed = state.agenda[idx];
+        state.agenda.splice(idx,1);
+        save(state); renderAll();
+        showToast('Compromisso removido.', function(){
+          state.agenda.splice(idx,0,removed); save(state); renderAll();
+        });
+      }
+    });
+  }
+
+  function wireOverlay(){
+    document.getElementById("overlay").addEventListener("click", function(e){
+      if(e.target.id === "overlay") closeOverlay();
+    });
+    document.addEventListener("keydown", function(e){
+      if(e.key === "Escape") closeOverlay();
+    });
+  }
+
+  function boot(){
+    state = load();
+    wireNav();
+    wireEstoque();
+    wireVendas();
+    wireAgenda();
+    wireOverlay();
+    setView("painel");
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>

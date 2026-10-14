@@ -1,0 +1,502 @@
+<title>Estoque Blendêê Burger</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Expanded:wght@700;800&family=Work+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+  :root{
+    --bg:#F3EFE6;
+    --surface:#FFFFFF;
+    --surface-2:#EAE3D3;
+    --text:#221D16;
+    --text-soft:#5B5347;
+    --accent:#D2491C;
+    --accent-ink:#FFFFFF;
+    --good:#4F6B4B;
+    --warn:#B23A2E;
+    --border:#E0D8C6;
+    --shadow: 0 1px 0 rgba(34,29,22,0.05);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#17140F;
+      --surface:#211C15;
+      --surface-2:#2A241A;
+      --text:#F1EBDD;
+      --text-soft:#B8AF9C;
+      --accent:#E8703A;
+      --accent-ink:#1A1410;
+      --good:#82A97A;
+      --warn:#E0665A;
+      --border:#3A3225;
+      --shadow: 0 1px 0 rgba(0,0,0,0.3);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#17140F;
+    --surface:#211C15;
+    --surface-2:#2A241A;
+    --text:#F1EBDD;
+    --text-soft:#B8AF9C;
+    --accent:#E8703A;
+    --accent-ink:#1A1410;
+    --good:#82A97A;
+    --warn:#E0665A;
+    --border:#3A3225;
+    --shadow: 0 1px 0 rgba(0,0,0,0.3);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Work Sans', system-ui, sans-serif;
+    padding:48px 20px 80px;
+    line-height:1.55;
+  }
+  .page{
+    max-width:760px;
+    margin:0 auto;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    font-weight:600;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--accent);
+  }
+  h1,h2,h3{
+    font-family:'Archivo Expanded', system-ui, sans-serif;
+    text-wrap:balance;
+    margin:0;
+  }
+  header.doc{
+    border-bottom:2px solid var(--text);
+    padding-bottom:24px;
+    margin-bottom:32px;
+  }
+  header.doc h1{
+    font-size:clamp(28px,5vw,42px);
+    font-weight:800;
+    line-height:1.05;
+    margin-top:10px;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:24px;
+    margin-top:20px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--text-soft);
+  }
+  .meta-row div span{
+    display:block;
+    color:var(--text);
+    font-weight:600;
+    font-size:14px;
+    margin-top:2px;
+  }
+
+  .note{
+    background:var(--surface-2);
+    border:1px solid var(--border);
+    border-radius:6px;
+    padding:16px 18px;
+    font-size:14.5px;
+    color:var(--text-soft);
+    margin-bottom:40px;
+  }
+  .note strong{color:var(--text);}
+
+  section{margin-bottom:44px;}
+  section h2{
+    font-size:22px;
+    font-weight:800;
+    margin-bottom:14px;
+  }
+  section .lede{
+    color:var(--text-soft);
+    max-width:62ch;
+    margin-bottom:18px;
+    font-size:15px;
+  }
+
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:8px;
+    box-shadow:var(--shadow);
+  }
+
+  .diag-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+  }
+  @media (max-width:520px){ .diag-grid{grid-template-columns:1fr;} }
+  .diag-card{
+    padding:18px;
+  }
+  .diag-card .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--warn);
+    font-weight:600;
+  }
+  .diag-card p{margin:8px 0 0; font-size:14.5px;}
+
+  table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:14.5px;
+  }
+  .table-wrap{
+    overflow-x:auto;
+    border:1px solid var(--border);
+    border-radius:8px;
+  }
+  table{background:var(--surface);}
+  th{
+    text-align:left;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--text-soft);
+    padding:12px 16px;
+    border-bottom:1px solid var(--border);
+    white-space:nowrap;
+  }
+  td{
+    padding:14px 16px;
+    border-bottom:1px solid var(--border);
+    vertical-align:top;
+  }
+  tr:last-child td{border-bottom:none;}
+  td.feat{font-weight:600; white-space:nowrap;}
+  td.desc{color:var(--text-soft);}
+
+  .out-list{
+    display:flex;
+    flex-direction:column;
+    gap:0;
+    border:1px solid var(--border);
+    border-radius:8px;
+    overflow:hidden;
+  }
+  .out-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:13px 16px;
+    background:var(--surface);
+    border-bottom:1px solid var(--border);
+    font-size:14.5px;
+    color:var(--text-soft);
+  }
+  .out-item:last-child{border-bottom:none;}
+  .out-item .x{
+    color:var(--warn);
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:13px;
+    flex-shrink:0;
+  }
+
+  .flow{
+    display:flex;
+    gap:0;
+    align-items:stretch;
+  }
+  @media (max-width:600px){ .flow{flex-direction:column;} }
+  .flow-step{
+    flex:1;
+    padding:20px;
+    position:relative;
+  }
+  .flow-step .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--accent);
+    font-weight:600;
+  }
+  .flow-step h3{
+    font-size:16px;
+    margin-top:6px;
+    font-weight:700;
+  }
+  .flow-step p{
+    font-size:13.5px;
+    color:var(--text-soft);
+    margin:6px 0 0;
+  }
+  .flow-arrow{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--text-soft);
+    font-size:20px;
+    padding:0 4px;
+  }
+  @media (max-width:600px){
+    .flow-arrow{transform:rotate(90deg); padding:2px 0;}
+  }
+
+  .timeline{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .tl-item{
+    display:flex;
+    gap:16px;
+    align-items:baseline;
+    padding:14px 16px;
+  }
+  .tl-item .when{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--accent);
+    font-weight:600;
+    width:130px;
+    flex-shrink:0;
+  }
+  .tl-item .what{font-size:14.5px;}
+
+  .invest{
+    padding:22px;
+    text-align:left;
+  }
+  .invest .label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    color:var(--text-soft);
+  }
+  .invest .value{
+    font-family:'Archivo Expanded', sans-serif;
+    font-size:20px;
+    font-weight:800;
+    margin-top:6px;
+  }
+
+  ol.steps{
+    list-style:none;
+    margin:0;
+    padding:0;
+    counter-reset:step;
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  ol.steps li{
+    counter-increment:step;
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+    background:var(--surface);
+    border:1px solid var(--border);
+    padding:14px 16px;
+    font-size:14.5px;
+  }
+  ol.steps li + li{border-top:none;}
+  ol.steps li:first-child{border-radius:8px 8px 0 0;}
+  ol.steps li:last-child{border-radius:0 0 8px 8px;}
+  ol.steps li::before{
+    content:counter(step);
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:600;
+    font-size:13px;
+    color:var(--accent-ink);
+    background:var(--accent);
+    width:22px;
+    height:22px;
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-shrink:0;
+  }
+
+  footer{
+    margin-top:56px;
+    padding-top:20px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:10px;
+    font-size:13px;
+    color:var(--text-soft);
+    font-family:'IBM Plex Mono', monospace;
+  }
+</style>
+
+<div class="page">
+
+  <header class="doc">
+    <img src="logo-blendee.png" alt="Blendêê Burger" style="width:96px; border-radius:10px; margin-bottom:18px; display:block;">
+    <div class="eyebrow">Proposta de escopo — v2</div>
+    <h1>Sistema de gestão de estoque</h1>
+    <div class="meta-row">
+      <div>Cliente<span>Blendêê Burger — Igor Aguiar</span></div>
+      <div>Preparado por<span>Gabriel Monteiro</span></div>
+      <div>Call de descoberta<span>05/10/2026</span></div>
+      <div>Essa apresentação<span>12/10/2026</span></div>
+    </div>
+  </header>
+
+  <div class="note">
+    <strong>Como ler isso:</strong> esse escopo já incorpora o que você me contou na nossa call — rotina de quinta a domingo, ficha técnica por produto, custo variando por semana. Tem uma demo funcional junto, ainda incompleta, só pra você ver o fluxo principal rodando de verdade. Vamos ajustar juntos o que não bater.
+  </div>
+
+  <section>
+    <div class="eyebrow">01 — Diagnóstico</div>
+    <h2>O problema, hoje</h2>
+    <p class="lede">Confirmado na call de descoberta:</p>
+    <div class="diag-grid">
+      <div class="card diag-card">
+        <div class="tag">8 meses, crescendo rápido</div>
+        <p>Já tentou controlar pelo ChatGPT (foto de nota fiscal) e por uma solução de IA no WhatsApp — não funcionou ou ficou caro (R$150/mês) pro nível de controle que precisa agora.</p>
+      </div>
+      <div class="card diag-card">
+        <div class="tag">Rotina quinta a domingo</div>
+        <p>Segunda e terça ele levanta o que falta e faz pedido com os fornecedores, que chegam até quinta. Pão e batata quase toda semana; carne e bebida de 15 em 15 dias. Estoque gira rápido — não quer sobra por causa de espaço e dinheiro parado.</p>
+      </div>
+      <div class="card diag-card">
+        <div class="tag">Sem ficha técnica</div>
+        <p>Não dá pra saber exatamente quanto de cada insumo um lanche consome — o que impede a baixa automática do estoque quando um produto é vendido.</p>
+      </div>
+      <div class="card diag-card">
+        <div class="tag">Preço de insumo varia</div>
+        <p>Tomate, por exemplo, varia de R$7 a R$15 dependendo da semana — ele quer acompanhar isso pra entender o CMV de cada produto, não só saber se tem ou não tem estoque.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">02 — Objetivo</div>
+    <h2>O que o sistema resolve</h2>
+    <p class="lede">Dar visão clara e em tempo real do que tem em estoque, quanto falta e quando comprar — pra nunca mais fechar cedo por falta de insumo, nem comprar mais do que precisa.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">03 — Escopo do MVP</div>
+    <h2>O que entra na primeira versão</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Funcionalidade</th><th>O que faz</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="feat">Cadastro de insumos</td><td class="desc">Pão, carne, queijo, molhos, embalagens, bebidas — cada um com sua unidade de medida (kg, un, litro, porção). Cadastro inicial entra de uma vez via planilha, sem digitar item por item. Itens vendidos em porção (ex: batata) entram já convertidos pra porção, não em kg.</td></tr>
+          <tr><td class="feat">Ficha técnica</td><td class="desc">Quanto de cada insumo um produto do cardápio consome (ex: Chicken Bacon = 1 pão + 1 hambúrguer de frango + 30g maionese + 1 fatia muçarela + tomate + alface).</td></tr>
+          <tr><td class="feat">Lançamento de vendas do dia</td><td class="desc">Você marca quantas unidades vendeu de cada produto — digitando ou colando o relatório que já tira do seu sistema de pedidos — e o sistema desconta os insumos sozinho, pela ficha técnica.</td></tr>
+          <tr><td class="feat">Entrada de estoque</td><td class="desc">Registro rápido de compra de fornecedor — o que entrou e quanto.</td></tr>
+          <tr><td class="feat">Baixa manual</td><td class="desc">Pra perda, quebra ou consumo interno que não veio de uma venda.</td></tr>
+          <tr><td class="feat">Estoque mínimo + alerta</td><td class="desc">Aviso quando um insumo bate no nível mínimo definido, pra comprar antes de faltar.</td></tr>
+          <tr><td class="feat">Custo e CMV</td><td class="desc">Custo por unidade de cada insumo (que varia semana a semana) e custo real de cada produto vendido, calculado pela ficha técnica.</td></tr>
+          <tr><td class="feat">Painel geral</td><td class="desc">Visão de tudo que tem em estoque agora e o valor total em estoque, num só lugar, direto do celular.</td></tr>
+          <tr><td class="feat">Histórico</td><td class="desc">Registro de todas as movimentações e vendas lançadas — o que entrou, saiu e quando.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">04 — Fora do escopo (v1)</div>
+    <h2>O que fica pra depois</h2>
+    <div class="out-list">
+      <div class="out-item"><span class="x">FORA</span> Integração com iFood e apps de delivery</div>
+      <div class="out-item"><span class="x">FORA</span> Nota fiscal e controle financeiro completo</div>
+      <div class="out-item"><span class="x">FORA</span> Múltiplas lojas ou unidades</div>
+      <div class="out-item"><span class="x">FORA</span> Acesso para fornecedores</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">05 — Fluxo</div>
+    <h2>Como funciona no dia a dia</h2>
+    <div class="card" style="padding:6px;">
+      <div class="flow">
+        <div class="flow-step">
+          <div class="num">01</div>
+          <h3>Compra chega</h3>
+          <p>Você registra a entrada — o que veio do fornecedor e quanto.</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="num">02</div>
+          <h3>Lança as vendas do dia</h3>
+          <p>No fim do dia, marca quanto vendeu de cada produto. O sistema baixa sozinho os insumos, pela ficha técnica.</p>
+        </div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-step">
+          <div class="num">03</div>
+          <h3>Alerta no mínimo</h3>
+          <p>Quando um insumo bate no nível mínimo, você é avisado pra repor.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">06 — Acesso</div>
+    <h2>Como você usa, no dia a dia</h2>
+    <p class="lede">Um app que você instala direto no celular — com ícone na tela, como qualquer outro app — sem custo de domínio ou mensalidade de hospedagem.</p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Característica</th><th>O que significa pra você</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="feat">Instalação</td><td class="desc">Você abre um link no celular e o navegador oferece a opção "adicionar à tela inicial" — a partir daí abre como um app normal, com ícone, sem barra de navegador.</td></tr>
+          <tr><td class="feat">Funciona sem wifi</td><td class="desc">O celular guarda uma cópia dos dados direto no aparelho. Dá pra consultar e lançar estoque mesmo sem internet — quando a conexão voltar, sincroniza sozinho.</td></tr>
+          <tr><td class="feat">Sem domínio/mensalidade</td><td class="desc">Em vez de comprar um endereço próprio e pagar hospedagem todo mês, uso um serviço gratuito que já fornece um link funcional. O sistema roda igual, só muda o nome do endereço.</td></tr>
+          <tr><td class="feat">Atualização automática</td><td class="desc">Quando eu publico uma melhoria, ela fica disponível no servidor. Na próxima vez que você abrir o app com internet, ele baixa a versão nova sozinho — parecido com como o WhatsApp se atualiza.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">07 — Cronograma estimado</div>
+    <h2>Prazo</h2>
+    <div class="card">
+      <div class="timeline">
+        <div class="tl-item"><div class="when">Semana 1</div><div class="what">Validar escopo final e cadastrar insumos + fichas técnicas com você.</div></div>
+        <div class="tl-item"><div class="when">Semana 1–2</div><div class="what">Construir o MVP: cadastro, entrada/saída de estoque, alerta de mínimo.</div></div>
+        <div class="tl-item"><div class="when">Semana 2</div><div class="what">Testar com movimento real de um fim de semana e ajustar.</div></div>
+      </div>
+    </div>
+    <p class="lede" style="margin-top:10px;">Estimativa inicial — confirmamos o prazo depois de fechar o escopo com você.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">08 — Investimento</div>
+    <h2>Valor</h2>
+    <div class="card invest">
+      <div class="label">Proposta comercial</div>
+      <div class="value">A alinhar nessa call, depois de fechar o escopo com você</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">09 — Próximos passos</div>
+    <h2>Depois da call</h2>
+    <ol class="steps">
+      <li>Fechar lista final dos insumos (unidade de cada um, incluindo os que são por porção) e as fichas técnicas de cada produto do cardápio</li>
+      <li>Fechar escopo e comercial</li>
+      <li>Começar o desenvolvimento do MVP</li>
+    </ol>
+  </section>
+
+  <footer>
+    <span>Blendêê Burger × Gabriel Monteiro</span>
+    <span>bielcorporation21@gmail.com</span>
+  </footer>
+
+</div>

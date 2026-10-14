@@ -113,3 +113,59 @@ Quando o usuário pedir skill nova:
 4. Se a skill precisar de arquivos de apoio (templates, exemplos),
    criar dentro da pasta da skill
 5. Seguir o fluxo da skill-creator nativa do Claude Code
+
+---
+
+# Gabriel Monteiro — MazyOS
+
+## O que é esse workspace
+
+Operação da minha marca pessoal e consultoria solo em IA e Marketing Digital. Aqui eu prospecto clientes, monto propostas (sites profissionais, automações de atendimento), produzo conteúdo e construo meu portfólio.
+
+**Estrutura de pastas:**
+- `_memoria/` — quem eu sou, como falo, o que tá em foco
+- `identidade/` — cores, fontes, logo, padrão visual
+- `marketing/` — conteúdo, SEO, campanhas (saída das skills)
+- `saidas/` — análises, emails, documentos pontuais
+- `dados/` — arquivos a analisar (CSV, PDF, planilha)
+- `scripts/` — utilitários (gerar imagem, postar, render)
+- Cada cliente/projeto (ex: Blendêê Burger) ganha pasta isolada via `/novo-projeto`
+
+## Quem sou
+
+Sou Gabriel Monteiro. Trabalho com IA e Marketing Digital — crio automações de atendimento e sites profissionais para pequenos negócios locais que precisam profissionalizar a presença digital e vender mais.
+
+## O que produzo
+
+- Sites profissionais para pequenos negócios
+- Automações de atendimento com IA
+- Estratégia e propostas de marketing digital
+
+## Minha audiência
+
+Ainda em fase de prospecção — negócio no início. Perfil de cliente: donos de pequenos negócios locais (ex: Igor Aguiar, dono da Blendêê Burger, hamburgueria artesanal) que sentem dificuldade em atrair clientes e têm um posicionamento digital pouco profissional.
+
+## Tom de voz
+
+Profissional mas próximo — cria relação de confiança antes de vender. Exemplo: "Fala meu amigo, tudo certo para a call hoje?"
+
+Evitar: falsidade, linguagem forçada/engessada, falta de interesse real, jargão de guru.
+
+## Posicionamento
+
+Ainda em construção — foco atual é fechar os primeiros cases (a começar por Blendêê Burger) para consolidar portfólio e prova social.
+
+## Regras do sistema
+
+- Conteúdo novo salvar em `marketing/conteudo/<tipo>-<tema>-<data>/`
+- Cada cliente/projeto novo cria pasta isolada via `/novo-projeto`
+
+## Ferramentas conectadas
+
+- [ ] Notion
+- [ ] Canva
+- [ ] Google Calendar
+- [ ] Meta Ads
+- [ ] Google Ads
+
+*(Marcar conforme for instalando os MCPs)*
